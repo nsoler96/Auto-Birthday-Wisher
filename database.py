@@ -7,7 +7,7 @@ conn=sqlite3.connect('contact_manager.db')
 c = conn.cursor()
 
 #Query The Database
-c.execute("SELECT rowid, * FROM contacts")
+c.execute("SELECT * FROM contacts WHERE last_name LIKE 'S%' ")
 
 items = c.fetchall()
 
