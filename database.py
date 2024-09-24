@@ -6,7 +6,7 @@ conn=sqlite3.connect('contact_manager.db')
 #Create a cursor
 c = conn.cursor()
 
-c.execute("INSERT INTO contacts VALUES ('Elin', 'Moya', '862-318-0388')")
+c.execute("INSERT INTO contacts VALUES ('Alex', 'Luna', '646-270-0006')")
 
 
 print("Command executed successfully")
