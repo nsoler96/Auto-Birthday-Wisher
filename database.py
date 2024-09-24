@@ -7,11 +7,8 @@ conn=sqlite3.connect('contact_manager.db')
 c = conn.cursor()
 
 
-# Update Records
-
-c.execute("""UPDATE contacts SET first_name = 'Linnette' 
-			WHERE rowid = 1
-	""")
+# Delete Records
+c.execute("DELETE from contacts Where rowid = 4")
 
 conn.commit()
 
