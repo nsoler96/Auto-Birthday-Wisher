@@ -7,16 +7,13 @@ conn=sqlite3.connect('contact_manager.db')
 c = conn.cursor()
 
 #Query The Database
-c.execute("SELECT * FROM contacts")
-
-
+c.execute("SELECT rowid, * FROM contacts")
 
 items = c.fetchall()
 
-print("NAME " + "\t\tPHONE NUMBER")
-print("----------" + "\t-----------")
 for item in items:
-	print(item[0] + " " + item[1] + "\t" + item[2])
+	print(item)
+
 
 
 print ("                    ")
