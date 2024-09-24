@@ -6,8 +6,18 @@ conn=sqlite3.connect('contact_manager.db')
 #Create a cursor
 c = conn.cursor()
 
-#Query The Database
-c.execute("SELECT * FROM contacts WHERE last_name LIKE 'S%' ")
+
+# Update Records
+
+c.execute("""UPDATE contacts SET first_name = 'Linnette' 
+			WHERE rowid = 1
+	""")
+
+conn.commit()
+
+
+# Query The Database
+c.execute ("SELECT rowid, * FROM contacts")
 
 items = c.fetchall()
 
