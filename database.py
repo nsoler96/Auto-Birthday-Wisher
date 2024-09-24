@@ -6,15 +6,10 @@ conn=sqlite3.connect('contact_manager.db')
 #Create a cursor
 c = conn.cursor()
 
-#Create a Table
-c.execute("""CREATE TABLE contacts (	
-	first_name text,
-	last_name text,
-	phone_number text 
-	)""")
+c.execute("INSERT INTO contacts VALUES ('Niobi', 'Soler', '201-931-3469')")
 
-print("Command executed successully...")
 
+print("Command executed successfully")
 # Commit our command
 conn.commit()
 
