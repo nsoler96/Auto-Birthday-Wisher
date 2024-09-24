@@ -9,8 +9,17 @@ c = conn.cursor()
 #Query The Database
 c.execute("SELECT * FROM contacts")
 
-print (c.fetchall())
 
+
+items = c.fetchall()
+
+print("NAME " + "\t\tPHONE NUMBER")
+print("----------" + "\t-----------")
+for item in items:
+	print(item[0] + " " + item[1] + "\t" + item[2])
+
+
+print ("                    ")
 print("Command executed successfully")
 # Commit our command
 conn.commit()
