@@ -1,45 +1,51 @@
-import pandas as pd
-import datetime
 import smtplib
-import os
+import datetime
+import pandas as pd
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 
-current_path = os.getcwd()
-print(current_path)
+# Read the data from the Excel file
+df = pd.read_excel("data.xlsx")
 
-# Change working directory (optional)
-os.chdir(current_path)
+# Get today's date
+today = datetime.datetime.now().date()
 
-# Input your Gmail credentials
-GMAIL_ID = input("Enter your email: ")
-GMAIL_PSWD = input("Enter password for your email mentioned above: ")
+# Lambda function to filter people whose birthday is today
+birthday_today = df[df['Birthday'].apply(lambda x: datetime.datetime.strptime(x, "%d-%m-%Y").date() == today)]
 
-def sendEmail(to, sub, msg):
-    print(f"Email to {to} sent: \nSubject: {sub} ,\nMessage: {msg}")
-    # Create SMTP session
-    s = smtplib.SMTP('smtp.gmail.com', 587)
-    s.starttls()  # Start TLS encryption
-    s.login(GMAIL_ID, GMAIL_PSWD)
-    s.sendmail(GMAIL_ID, to, f"Subject: {sub}\n\n{msg}")
-    s.quit()
+# Define the email function (for sending email to each person)
+def send_email(to_email, subject, body):
+    # Your email credentials
+    sender_email = "ns@dryfastmetro.com"
+    password = "ffgewduwxzynbbdy"
+    
+    # Set up the SMTP server (this is for Gmail, adjust if you're using a different provider)
+    with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
+        server.login(sender_email, password)
+        
+        # Compose the email
+        msg = MIMEMultipart()
+        msg['From'] = sender_email
+        msg['To'] = to_email
+        msg['Subject'] = subject
+        
+        # Attach the body with the msg instance
+        msg.attach(MIMEText(body, 'plain'))
+        
+        # Send the email
+        server.sendmail(sender_email, to_email, msg.as_string())
 
-if __name__ == "__main__":
-    # Load the friends' data from the Excel file
-    df = pd.read_excel("data.xlsx")
-    today = datetime.datetime.now().strftime("%d-%m")
-    yearNow = datetime.datetime.now().strftime("%Y")
+# Lambda function to generate the birthday message
+generate_email_message = lambda name: f"Happy Birthday, {name}! Wishing you a wonderful day!"
 
-    writeInd = []
-    for index, item in df.iterrows():
-        bday = item['Birthday']
-        bday = datetime.datetime.strptime(bday, "%d-%m-%Y")
-        bday = bday.strftime("%d-%m")
-        if today == bday and yearNow not in str(item['LastWishedYear']):
-            sendEmail(item['Email'], "Happy Birthday", item['Dialogue'])
-            writeInd.append(index)
+# Loop through each person whose birthday is today and send them an email
+for index, row in birthday_today.iterrows():
+    name = row['Name']
+    email = row['Email']
+    subject = "Happy Birthday!"
+    message = generate_email_message(name)
+    
+    # Send the email
+    send_email(email, subject, message)
+    print(f"Email sent to {name} ({email})")
 
-    if writeInd:
-        for i in writeInd:
-            oldYear = df.loc[i, 'LastWishedYear']
-            df.loc[i, 'LastWishedYear'] = str(oldYear) + ", " + str(yearNow)
-
-    df.to_excel('data.xlsx', index=False)
