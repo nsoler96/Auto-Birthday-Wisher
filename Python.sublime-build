@@ -1,0 +1,7 @@
+{
+	"shell_cmd": "make"
+}
+{
+    "cmd": ["python", "$file"],
+    "selector": "source.python"
+}
